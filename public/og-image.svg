@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#0B1220"/>
+      <stop offset="1" stop-color="#111827"/>
+    </linearGradient>
+    <linearGradient id="ring" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#2563EB"/>
+      <stop offset="1" stop-color="#7C3AED"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="240" cy="315" r="140" fill="none" stroke="url(#ring)" stroke-width="10"/>
+  <circle cx="240" cy="175" r="26" fill="#2563EB"/>
+  <circle cx="380" cy="315" r="26" fill="#22C55E"/>
+  <circle cx="240" cy="455" r="26" fill="#7C3AED"/>
+  <circle cx="100" cy="315" r="26" fill="#FB8C00"/>
+  <circle cx="240" cy="315" r="60" fill="url(#ring)"/>
+  <text x="460" y="290" font-family="Arial, sans-serif" font-size="72" font-weight="800" fill="#F8FAFC">Ex-Ford PMO</text>
+  <text x="460" y="360" font-family="Arial, sans-serif" font-size="72" font-weight="800" fill="#F8FAFC">Meet Up</text>
+  <text x="460" y="410" font-family="Arial, sans-serif" font-size="30" font-weight="600" fill="#93C5FD">Plan · Manage · Deliver · Succeed</text>
+</svg>

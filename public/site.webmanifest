@@ -1,0 +1,12 @@
+{
+  "name": "Ex-Ford PMO Meet Up",
+  "short_name": "Ford PMO",
+  "description": "Plan, manage, deliver and celebrate meet-ups with the Ex-Ford PMO crew.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F7F8FA",
+  "theme_color": "#0B1220",
+  "icons": [
+    { "src": "/favicon.svg", "sizes": "any", "type": "image/svg+xml", "purpose": "any" }
+  ]
+}

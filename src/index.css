@@ -1,0 +1,96 @@
+@import 'tailwindcss';
+
+@theme {
+  --font-sans: 'Inter', system-ui, 'Segoe UI', Roboto, sans-serif;
+  --font-display: 'Sora', 'Inter', system-ui, sans-serif;
+  --font-hand: 'Kalam', cursive;
+
+  --color-plan: #2563eb;
+  --color-plan-light: #60a5fa;
+  --color-manage: #16a34a;
+  --color-manage-light: #4ade80;
+  --color-deliver: #ea580c;
+  --color-deliver-light: #fb923c;
+  --color-succeed: #7c3aed;
+  --color-succeed-light: #a78bfa;
+
+  --color-navy: #0b1220;
+  --color-ink: #111827;
+  --color-paper: #f7f8fa;
+  --color-paper-dark: #0b0f19;
+
+  --animate-float: float 6s ease-in-out infinite;
+  --animate-pop: pop 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+}
+
+@keyframes float {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(0.85);
+  }
+  60% {
+    transform: scale(1.08);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    @apply bg-paper text-ink font-sans antialiased;
+  }
+
+  h1,
+  h2,
+  h3,
+  h4 {
+    @apply font-display text-navy;
+  }
+
+  :focus-visible {
+    outline: 3px solid var(--color-plan);
+    outline-offset: 2px;
+    border-radius: 4px;
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html {
+      scroll-behavior: auto;
+    }
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+  }
+}
+
+@layer components {
+  .brand-gradient {
+    @apply bg-gradient-to-br from-plan via-succeed to-deliver;
+  }
+
+  .text-gradient {
+    @apply bg-gradient-to-r from-plan via-succeed to-deliver bg-clip-text text-transparent;
+  }
+
+  .skip-link {
+    @apply sr-only focus:not-sr-only focus:fixed focus:top-2 focus:left-2 focus:z-50 focus:rounded-lg focus:bg-navy focus:px-4 focus:py-2 focus:text-white;
+  }
+}

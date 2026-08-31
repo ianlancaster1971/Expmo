@@ -1,0 +1,17 @@
+rules_version = '2';
+
+// Matches this site's current setup: the Dashboard has no login, so anyone
+// with the link can add/edit/delete events and home page content. If you
+// later add authentication, tighten `allow write` to `if request.auth != null`.
+service cloud.firestore {
+  match /databases/{database}/documents {
+    match /events/{eventId} {
+      allow read: if true;
+      allow write: if true;
+    }
+    match /content/{docId} {
+      allow read: if true;
+      allow write: if true;
+    }
+  }
+}
