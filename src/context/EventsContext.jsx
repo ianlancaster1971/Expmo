@@ -32,6 +32,28 @@ function saveLocal(key, value) {
   }
 }
 
+/** Fire-and-forget email notification for Future event changes (see
+ * netlify/functions/notify-future-event.js). Never blocks or fails the
+ * save itself — a missing/broken email setup shouldn't stop the site from
+ * working. */
+async function notifyFutureEvent(action, event) {
+  try {
+    await fetch("/.netlify/functions/notify-future-event", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        action,
+        title: event.title,
+        date: event.date,
+        location: event.location,
+        venue: event.venue,
+      }),
+    });
+  } catch {
+    // Notification is best-effort only.
+  }
+}
+
 function slugify(text) {
   return (
     text
@@ -97,22 +119,30 @@ export function EventsProvider({ children }) {
     if (isSupabaseConfigured) {
       const remote = await import("../lib/supabaseEvents");
       await remote.addEventRemote(id, event);
+      if (category === "future") notifyFutureEvent("added", event);
     } else {
       setEvents((prev) => [...prev, event]);
     }
     return event;
   }, []);
 
-  const updateEvent = useCallback(async (id, patch) => {
-    if (isSupabaseConfigured) {
-      const remote = await import("../lib/supabaseEvents");
-      await remote.updateEventRemote(id, patch);
-    } else {
-      setEvents((prev) =>
-        prev.map((e) => (e.id === id ? { ...e, ...patch } : e)),
-      );
-    }
-  }, []);
+  const updateEvent = useCallback(
+    async (id, patch) => {
+      if (isSupabaseConfigured) {
+        const remote = await import("../lib/supabaseEvents");
+        await remote.updateEventRemote(id, patch);
+        const existing = events.find((e) => e.id === id);
+        if (existing?.category === "future") {
+          notifyFutureEvent("updated", { ...existing, ...patch });
+        }
+      } else {
+        setEvents((prev) =>
+          prev.map((e) => (e.id === id ? { ...e, ...patch } : e)),
+        );
+      }
+    },
+    [events],
+  );
 
   const deleteEvent = useCallback(async (id) => {
     if (isSupabaseConfigured) {
