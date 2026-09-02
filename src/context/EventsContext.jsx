@@ -6,7 +6,7 @@ import {
   useMemo,
   useState,
 } from "react";
-import { isFirebaseConfigured } from "../lib/firebase";
+import { isSupabaseConfigured } from "../lib/supabase";
 import { seedEvents, seedSiteContent } from "../data/seedData";
 
 const EventsContext = createContext(null);
@@ -44,24 +44,24 @@ function slugify(text) {
 
 export function EventsProvider({ children }) {
   const [events, setEvents] = useState(() =>
-    isFirebaseConfigured ? [] : loadLocal(LOCAL_EVENTS_KEY, seedEvents),
+    isSupabaseConfigured ? [] : loadLocal(LOCAL_EVENTS_KEY, seedEvents),
   );
   const [siteContent, setSiteContent] = useState(() =>
-    isFirebaseConfigured
+    isSupabaseConfigured
       ? seedSiteContent
       : loadLocal(LOCAL_CONTENT_KEY, seedSiteContent),
   );
-  const [loading, setLoading] = useState(isFirebaseConfigured);
+  const [loading, setLoading] = useState(isSupabaseConfigured);
 
-  // ---- Live Firestore mode (Firebase SDK is loaded lazily) --------------
+  // ---- Live Supabase mode (client library is loaded lazily) ------------
   useEffect(() => {
-    if (!isFirebaseConfigured) return undefined;
+    if (!isSupabaseConfigured) return undefined;
 
     let cancelled = false;
     let unsubEvents;
     let unsubContent;
 
-    import("../lib/firestoreEvents").then(async (remote) => {
+    import("../lib/supabaseEvents").then(async (remote) => {
       if (cancelled) return;
       await remote.seedIfEmpty();
       if (cancelled) return;
@@ -82,11 +82,11 @@ export function EventsProvider({ children }) {
 
   // ---- Local demo mode: persist to localStorage --------------------------
   useEffect(() => {
-    if (!isFirebaseConfigured) saveLocal(LOCAL_EVENTS_KEY, events);
+    if (!isSupabaseConfigured) saveLocal(LOCAL_EVENTS_KEY, events);
   }, [events]);
 
   useEffect(() => {
-    if (!isFirebaseConfigured) saveLocal(LOCAL_CONTENT_KEY, siteContent);
+    if (!isSupabaseConfigured) saveLocal(LOCAL_CONTENT_KEY, siteContent);
   }, [siteContent]);
 
   // ---- CRUD ---------------------------------------------------------------
@@ -94,8 +94,8 @@ export function EventsProvider({ children }) {
     const id = `${slugify(data.title || "event")}-${Date.now().toString(36)}`;
     const event = { id, category, votes: 0, ...data };
 
-    if (isFirebaseConfigured) {
-      const remote = await import("../lib/firestoreEvents");
+    if (isSupabaseConfigured) {
+      const remote = await import("../lib/supabaseEvents");
       await remote.addEventRemote(id, event);
     } else {
       setEvents((prev) => [...prev, event]);
@@ -104,8 +104,8 @@ export function EventsProvider({ children }) {
   }, []);
 
   const updateEvent = useCallback(async (id, patch) => {
-    if (isFirebaseConfigured) {
-      const remote = await import("../lib/firestoreEvents");
+    if (isSupabaseConfigured) {
+      const remote = await import("../lib/supabaseEvents");
       await remote.updateEventRemote(id, patch);
     } else {
       setEvents((prev) =>
@@ -115,8 +115,8 @@ export function EventsProvider({ children }) {
   }, []);
 
   const deleteEvent = useCallback(async (id) => {
-    if (isFirebaseConfigured) {
-      const remote = await import("../lib/firestoreEvents");
+    if (isSupabaseConfigured) {
+      const remote = await import("../lib/supabaseEvents");
       await remote.deleteEventRemote(id);
     } else {
       setEvents((prev) => prev.filter((e) => e.id !== id));
@@ -124,8 +124,8 @@ export function EventsProvider({ children }) {
   }, []);
 
   const voteEvent = useCallback(async (id) => {
-    if (isFirebaseConfigured) {
-      const remote = await import("../lib/firestoreEvents");
+    if (isSupabaseConfigured) {
+      const remote = await import("../lib/supabaseEvents");
       await remote.voteEventRemote(id);
     } else {
       setEvents((prev) =>
@@ -139,8 +139,8 @@ export function EventsProvider({ children }) {
   const updateSiteContent = useCallback(
     async (patch) => {
       const next = { ...siteContent, ...patch };
-      if (isFirebaseConfigured) {
-        const remote = await import("../lib/firestoreEvents");
+      if (isSupabaseConfigured) {
+        const remote = await import("../lib/supabaseEvents");
         await remote.updateContentRemote(next);
       } else {
         setSiteContent(next);
@@ -154,7 +154,7 @@ export function EventsProvider({ children }) {
       events,
       siteContent,
       loading,
-      isLive: isFirebaseConfigured,
+      isLive: isSupabaseConfigured,
       addEvent,
       updateEvent,
       deleteEvent,

@@ -8,13 +8,6 @@ import ScrollReveal from "../components/ScrollReveal";
 import EmptyState from "../components/EmptyState";
 import { useEvents } from "../context/EventsContext";
 
-const RING_STYLES = {
-  plan: "bg-plan/10 text-plan",
-  manage: "bg-manage/10 text-manage",
-  deliver: "bg-deliver/10 text-deliver",
-  succeed: "bg-succeed/10 text-succeed",
-};
-
 const QUICK_LINKS = [
   {
     to: "/future-events",
@@ -70,7 +63,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="mt-8 text-center font-hand text-xl text-succeed sm:text-2xl"
+            className="mt-8 text-center font-hand text-[2.5rem] text-plan sm:text-[3rem]"
           >
             {siteContent.heroEyebrow}
           </motion.p>
@@ -103,35 +96,7 @@ export default function Home() {
             >
               See what's coming up
             </Link>
-            <Link
-              to="/potential-events"
-              className="rounded-full border-2 border-navy/10 bg-white px-6 py-3 text-sm font-bold text-navy transition-transform hover:scale-105 hover:border-succeed/40"
-            >
-              Vote on the next one
-            </Link>
           </motion.div>
-        </div>
-      </section>
-
-      {/* Plan / Manage / Deliver / Succeed ring */}
-      <section className="mx-auto max-w-6xl px-4 py-14 sm:px-6">
-        <div className="grid grid-cols-2 gap-4 sm:gap-6 lg:grid-cols-4">
-          {siteContent.ringLabels?.map((item, i) => (
-            <ScrollReveal key={item.key} delay={i * 0.08}>
-              <div className="flex h-full flex-col items-center rounded-2xl border border-slate-200 bg-white p-5 text-center shadow-sm">
-                <span
-                  className={`flex h-14 w-14 items-center justify-center rounded-full text-2xl ${RING_STYLES[item.key]}`}
-                  aria-hidden="true"
-                >
-                  {{ plan: "📋", manage: "👥", deliver: "📈", succeed: "🎯" }[item.key]}
-                </span>
-                <h3 className="mt-3 font-display text-base font-bold text-navy">
-                  {item.title}
-                </h3>
-                <p className="mt-1 text-sm text-slate-500">{item.caption}</p>
-              </div>
-            </ScrollReveal>
-          ))}
         </div>
       </section>
 
