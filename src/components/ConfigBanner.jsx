@@ -2,7 +2,7 @@ import { useEvents } from "../context/EventsContext";
 
 /**
  * Tells whoever is looking at the Dashboard whether edits are only saved to
- * this browser (demo mode) or are live for every visitor (Firebase mode).
+ * this browser (demo mode) or are live for every visitor (Supabase mode).
  */
 export default function ConfigBanner() {
   const { isLive } = useEvents();
@@ -23,7 +23,7 @@ export default function ConfigBanner() {
         this browser.
       </p>
       <p className="mt-1 text-deliver/80">
-        Connect a free Firebase project and add the keys to{" "}
+        Connect a free Supabase project and add the keys to{" "}
         <code className="rounded bg-white/60 px-1 py-0.5 font-mono text-xs">
           .env
         </code>{" "}
