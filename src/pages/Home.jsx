@@ -63,26 +63,31 @@ export default function Home() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="mt-8 text-center font-hand text-[2.5rem] text-plan sm:text-[3rem]"
+            className="mt-8 whitespace-pre-line text-center text-[2.5rem] font-bold uppercase leading-tight text-plan sm:text-[3rem]"
+            style={{ fontFamily: "Arial, sans-serif" }}
           >
             {siteContent.heroEyebrow}
           </motion.p>
-          <motion.h2
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.2 }}
-            className="mt-2 text-center text-2xl font-extrabold text-navy sm:text-3xl"
-          >
-            {siteContent.heroTitle}
-          </motion.h2>
-          <motion.p
-            initial={{ opacity: 0, y: 16 }}
-            animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.5, delay: 0.25 }}
-            className="mx-auto mt-4 max-w-xl text-center text-base text-slate-600"
-          >
-            {siteContent.heroSubtitle}
-          </motion.p>
+          {siteContent.heroTitle && (
+            <motion.h2
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.2 }}
+              className="mt-2 text-center text-2xl font-extrabold text-navy sm:text-3xl"
+            >
+              {siteContent.heroTitle}
+            </motion.h2>
+          )}
+          {siteContent.heroSubtitle && (
+            <motion.p
+              initial={{ opacity: 0, y: 16 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.25 }}
+              className="mx-auto mt-4 max-w-xl text-center text-base text-slate-600"
+            >
+              {siteContent.heroSubtitle}
+            </motion.p>
+          )}
 
           <motion.div
             initial={{ opacity: 0, y: 16 }}

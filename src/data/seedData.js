@@ -3,10 +3,9 @@
 // be edited, added to, or deleted from the Dashboard once the site is live.
 
 export const seedSiteContent = {
-  heroEyebrow: "Ex-Ford PMO Meet Up",
-  heroTitle: "Old team. New pubs. Zero status reports.",
-  heroSubtitle:
-    "We used to run projects together — now we just run into each other at the bar. Find out what's coming up, pitch where we should go next, and relive the ones that got a bit messy.",
+  heroEyebrow: "Ex-PMO Team\nSocial Calendar",
+  heroTitle: "",
+  heroSubtitle: "",
   aboutTitle: "What is this, exactly?",
   aboutText:
     "A loose, very unofficial reunion crew for anyone who survived the Ford PMO. No agendas, no RAID logs, no steering committee — just a semi-regular excuse to catch up over food and a few drinks. Plan it, manage it, deliver it, and call it a success. That's the whole methodology.",

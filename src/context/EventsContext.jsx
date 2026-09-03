@@ -54,6 +54,14 @@ async function notifyFutureEvent(action, event) {
   }
 }
 
+/** Today as a "YYYY-MM-DD" string (local time), comparable directly
+ * against the event.date strings the app stores. */
+function todayIso() {
+  const d = new Date();
+  const pad = (n) => String(n).padStart(2, "0");
+  return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())}`;
+}
+
 function slugify(text) {
   return (
     text
@@ -132,7 +140,8 @@ export function EventsProvider({ children }) {
         const remote = await import("../lib/supabaseEvents");
         await remote.updateEventRemote(id, patch);
         const existing = events.find((e) => e.id === id);
-        if (existing?.category === "future") {
+        const staysFuture = existing?.category === "future" && patch.category !== "past";
+        if (staysFuture) {
           notifyFutureEvent("updated", { ...existing, ...patch });
         }
       } else {
@@ -178,6 +187,18 @@ export function EventsProvider({ children }) {
     },
     [siteContent],
   );
+
+  // ---- Auto-archive: once a Future event's date has passed, move it into
+  // Past Events. Runs whenever the event list changes (e.g. on load, or
+  // after a live Supabase update); each qualifying event only matches once,
+  // since moving it to "past" takes it out of the "future" filter below.
+  useEffect(() => {
+    const today = todayIso();
+    const overdue = events.filter(
+      (e) => e.category === "future" && e.date && e.date < today,
+    );
+    overdue.forEach((e) => updateEvent(e.id, { category: "past" }));
+  }, [events, updateEvent]);
 
   const value = useMemo(
     () => ({
