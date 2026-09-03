@@ -63,8 +63,7 @@ export default function Home() {
             initial={{ opacity: 0, y: 16 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.15 }}
-            className="mt-8 whitespace-pre-line text-center text-[2.5rem] font-bold uppercase leading-tight text-plan sm:text-[3rem]"
-            style={{ fontFamily: "Arial, sans-serif" }}
+            className="mx-auto mt-8 w-fit whitespace-pre-line rounded-2xl border border-blue-100 bg-blue-50 px-8 py-4 text-center font-display text-4xl font-extrabold leading-tight tracking-tight text-blue-800 shadow-sm sm:text-5xl"
           >
             {siteContent.heroEyebrow}
           </motion.p>
