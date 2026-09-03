@@ -1,8 +1,14 @@
 // Sends an email notification whenever a Future event is added or edited
 // via the Dashboard. Called (fire-and-forget) from
-// src/context/EventsContext.jsx. Runs server-side only, via Netlify — the
-// Resend API key is read from an env var here and never reaches the
-// browser bundle.
+// src/context/EventsContext.jsx. Runs server-side only, via Netlify — sends
+// through the site owner's own Gmail account over SMTP, using an app
+// password read from an env var here that never reaches the browser
+// bundle. (Previously used Resend's onboarding@resend.dev sandbox sender,
+// which Resend restricts to only deliver to the account's own signup
+// email — no good for a 3-person recipient list without a verified
+// domain. Gmail SMTP has no such restriction.)
+import nodemailer from "nodemailer";
+
 const RECIPIENTS = [
   "ian.lancaster1971@gmail.com",
   "simon.green1960@virginmedia.com",
@@ -16,9 +22,10 @@ export const handler = async (event) => {
     return { statusCode: 405, body: "Method not allowed" };
   }
 
-  const apiKey = process.env.RESEND_API_KEY;
-  if (!apiKey) {
-    console.error("RESEND_API_KEY is not set");
+  const gmailUser = process.env.GMAIL_USER;
+  const gmailAppPassword = process.env.GMAIL_APP_PASSWORD;
+  if (!gmailUser || !gmailAppPassword) {
+    console.error("GMAIL_USER / GMAIL_APP_PASSWORD is not set");
     return { statusCode: 500, body: "Email not configured" };
   }
 
@@ -47,23 +54,20 @@ export const handler = async (event) => {
     <p>More details: <a href="${SITE_URL}">${SITE_URL}</a></p>
   `;
 
-  const res = await fetch("https://api.resend.com/emails", {
-    method: "POST",
-    headers: {
-      Authorization: `Bearer ${apiKey}`,
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify({
-      from: "Ex-Ford PMO Meet Up <onboarding@resend.dev>",
+  const transporter = nodemailer.createTransport({
+    service: "gmail",
+    auth: { user: gmailUser, pass: gmailAppPassword },
+  });
+
+  try {
+    await transporter.sendMail({
+      from: `"Ex-Ford PMO Meet Up" <${gmailUser}>`,
       to: RECIPIENTS,
       subject,
       html,
-    }),
-  });
-
-  if (!res.ok) {
-    const text = await res.text();
-    console.error("Resend error:", res.status, text);
+    });
+  } catch (err) {
+    console.error("Gmail send error:", err);
     return { statusCode: 502, body: "Failed to send email" };
   }
 
